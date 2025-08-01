@@ -9,6 +9,9 @@
   targetPort = 3000
   framework = "next"
 
+  [build.environment]
+  NODE_VERSION = "18.18.0"
+
 [functions]
   node_bundler = "esbuild"
 
