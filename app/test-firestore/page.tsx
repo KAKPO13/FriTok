@@ -25,7 +25,7 @@ export default function TestFirestorePage() {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const docRef = doc(db, "video_playlist", "NHiOx1Ibp4WsHJvBkGbY"); // Remplace par un ID réel
+        const docRef = doc(db, "videos", "EpMg6brCDfsZ8sejM73K"); // Remplace par un ID réel
         const snapshot = await getDoc(docRef);
 
         if (snapshot.exists()) {
