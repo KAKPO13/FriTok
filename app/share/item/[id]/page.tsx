@@ -2,13 +2,10 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { initializeApp } from "firebase/app";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import type { ResolvingMetadata } from "next";
 
-// 🔐 Configuration Firebase (remplace par tes vrais paramètres)
+// 🔐 Configuration Firebase
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
@@ -18,6 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// 📦 Type des données Firestore
 type ItemData = {
   id: string;
   title: string;
@@ -26,14 +24,17 @@ type ItemData = {
   price: number;
 };
 
-// 🧠 OG dynamique via Firestore
-export async function generateMetadata({
-  params,
-  searchParams,
-}: {
+// ✅ Props typés pour App Router
+type Props = {
   params: { id: string };
   searchParams?: { token?: string };
-}): Promise<Metadata> {
+};
+
+// 🧠 OG dynamique via Firestore
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  _resolve?: ResolvingMetadata
+): Promise<Metadata> {
   const docRef = doc(db, "items", params.id);
   const snapshot = await getDoc(docRef);
   const data = snapshot.data() as ItemData | undefined;
@@ -54,14 +55,8 @@ export async function generateMetadata({
   };
 }
 
-// 🎨 Composant principal
-export default async function ItemPage({
-  params,
-  searchParams,
-}: {
-  params: { id: string };
-  searchParams?: { token?: string };
-}) {
+// 🖼️ Composant principal
+export default async function ItemPage({ params, searchParams }: Props) {
   const docRef = doc(db, "items", params.id);
   const snapshot = await getDoc(docRef);
   const data = snapshot.data() as ItemData | undefined;
@@ -95,4 +90,5 @@ export default async function ItemPage({
     </div>
   );
 }
+
 
